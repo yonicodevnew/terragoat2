@@ -2,8 +2,7 @@ import "http"
 import "json"
 import "tfrun"
 
-param PRISMA_ACCESS_KEY
-param PRISMA_SECRET_KEY
+param BC_API_KEY
 
 body = {
     "organization" : tfrun.organization.name,
@@ -23,10 +22,7 @@ body = {
     },
 }
 
-loginReq = http.request("https://api4.prismacloud.io/login").with_body(json.marshal({"username": PRISMA_ACCESS_KEY, "password": PRISMA_SECRET_KEY})).with_header("Content-Type", "application/json")
-loginResp = json.unmarshal(http.post(loginReq).body)
-
-req = http.request("https://api3.prismacloud.io/bridgecrew/api/v1/global/terraformEnterprise/webhook").with_body(json.marshal(body)).with_header("Authorization", loginResp.token)
+req = http.request("https://t4th5zqsqk.execute-api.us-west-2.amazonaws.com/v1/api/v1/terraformEnterprise/webhook").with_body(json.marshal(body)).with_header("Authorization", BC_API_KEY)
 resp = json.unmarshal(http.post(req).body).data
 
 if (length(resp.violations) > 0) {
